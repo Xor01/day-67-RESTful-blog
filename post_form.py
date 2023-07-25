@@ -7,9 +7,9 @@ ckeditor = CKEditor()
 
 
 class PostForm(FlaskForm):
-    title = StringField(label='Post Title')
-    subtitle = StringField(label='Post Subtitle')
-    author = StringField(label='Your Name')
-    img_url = URLField(label='Post Image URL')
-    body = CKEditorField(label='Body Content')
-    submit = SubmitField(label='Submit')
+    title = StringField(label='Post Title', validators=[DataRequired()])
+    subtitle = StringField(label='Post Subtitle', validators=[DataRequired()])
+    author = StringField(label='Your Name', validators=[DataRequired()])
+    img_url = URLField(label='Post Image URL', validators=[DataRequired()])
+    body = CKEditorField(label='Body Content', validators=[DataRequired()])
+    submit = SubmitField(label='Submit', validators=[DataRequired()])

@@ -19,7 +19,6 @@ ckeditor.init_app(app=app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db.init_app(app)
 
-
 with app.app_context():
     db.create_all()
 
@@ -40,9 +39,21 @@ def show_post(post_id):
 
 
 # TODO: add_new_post() to create a new blog post
-@app.route('/new_post')
+@app.route('/new_post', methods=['GET', 'POST'])
 def creat_post():
     form = PostForm()
+    if form.validate_on_submit():
+        post = BlogPost(
+            title=form.title.data,
+            subtitle=form.subtitle.data,
+            date=date.today().strftime('%B %d, %Y'),
+            body=form.body.data,
+            author=form.author.data,
+            img_url=form.img_url.data,
+        )
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('get_all_posts'))
     return render_template('make-post.html', form=form)
 
 
