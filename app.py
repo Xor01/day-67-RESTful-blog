@@ -1,9 +1,5 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap5
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, URL
-from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
 from os import getenv
 from dotenv import load_dotenv
@@ -54,10 +50,24 @@ def creat_post():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('get_all_posts'))
-    return render_template('make-post.html', form=form)
+    h1 = 'New Post'
+    return render_template('make-post.html', form=form, h1=h1)
 
 
 # TODO: edit_post() to change an existing blog post
+@app.route('/edit_post/<int:post_id>')
+def edit_post(post_id):
+    post = db.get_or_404(BlogPost, post_id)
+    form = PostForm(
+        title=post.title,
+        subtitle=post.subtitle,
+        author=post.author,
+        body=post.body,
+        img_url=post.img_url,
+    )
+    h1 = 'Edit Post'
+    return render_template('make-post.html', form=form, h1=h1)
+
 
 # TODO: delete_post() to remove a blog post from the database
 
