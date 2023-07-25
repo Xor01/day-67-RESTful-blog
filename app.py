@@ -55,7 +55,7 @@ def creat_post():
 
 
 # TODO: edit_post() to change an existing blog post
-@app.route('/edit_post/<int:post_id>')
+@app.route('/edit_post/<int:post_id>', methods=['GET', 'POST'])
 def edit_post(post_id):
     post = db.get_or_404(BlogPost, post_id)
     form = PostForm(
@@ -65,6 +65,16 @@ def edit_post(post_id):
         body=post.body,
         img_url=post.img_url,
     )
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.subtitle = form.subtitle.data
+        post.body = form.body.data
+        post.author = form.author.data
+        post.img_url = form.img_url.data
+        db.session.commit()
+        return redirect(url_for('show_post', post_id=post_id))
+
     h1 = 'Edit Post'
     return render_template('make-post.html', form=form, h1=h1)
 
